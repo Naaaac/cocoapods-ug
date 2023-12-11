@@ -1,44 +1,58 @@
 module Pod
-  class Command
-    # This is an example of a cocoapods plugin adding a top-level subcommand
-    # to the 'pod' command.
-    #
-    # You can also create subcommands of existing or new commands. Say you
-    # wanted to add a subcommand to `list` to show newly deprecated pods,
-    # (e.g. `pod list deprecated`), there are a few things that would need
-    # to change.
-    #
-    # - move this file to `lib/pod/command/list/deprecated.rb` and update
-    #   the class to exist in the the Pod::Command::List namespace
-    # - change this class to extend from `List` instead of `Command`. This
-    #   tells the plugin system that it is a subcommand of `list`.
-    # - edit `lib/cocoapods_plugins.rb` to require this file
-    #
-    # @todo Create a PR to add your plugin to CocoaPods/cocoapods.org
-    #       in the `plugins.json` file, once your plugin is released.
-    #
-    class Ug < Command
-      self.summary = 'Short description of cocoapods-ug.'
-
-      self.description = <<-DESC
-        Longer description of cocoapods-ug.
-      DESC
-
-      self.arguments = 'NAME'
-
-      def initialize(argv)
-        @name = argv.shift_argument
-        super
-      end
-
-      def validate!
-        super
-        help! 'A Pod name is required.' unless @name
-      end
-
-      def run
-        UI.puts "Add your implementation for the cocoapods-ug plugin in #{__FILE__}"
-      end
+    class Command
+        class Uginstall < Command
+            self.summary = 'cocoapods plugin for ugreen'
+            
+            self.description = <<-DESC
+            ugreen solves the problem of native and flutter source debugging.
+            DESC
+            
+            # self.arguments = [
+            # CLAide::Argument.new('NAME', true)
+            # ]
+            
+            # def initialize(argv)
+            # @name = argv.shift_argument
+            # super
+            # end
+            
+            # def validate!
+            # super
+            #  help! 'A Pod name is required.' unless @name
+            #end
+            
+            def replace_podfile_with(file_name)
+                target_file = 'Podfile'
+                
+                # 读取指定文件的内容
+                replacement_content = File.read(file_name)
+                
+                # 将指定文件的内容替换到 Podfile 中
+                File.open(target_file, 'w') do |file|
+                    file.puts replacement_content
+                end
+                
+                UI.puts "Replaced #{target_file} with #{file_name}"
+                
+                # 执行 pod install
+                system('pod install')
+            end
+            
+            def has_flutter_branch?
+                # 执行 git branch 命令获取当前分支的名称
+                branch_name = `git rev-parse --abbrev-ref HEAD`.strip
+                
+                # 判断分支名称是否包含 "flutter" 字段
+                branch_name.include?("flutter")
+            end
+            
+            def run
+                if has_flutter_branch?
+                    replace_podfile_with('podfile_flutter')
+                else
+                    replace_podfile_with('podfile_dev')
+                end
+            end
+        end
     end
-  end
 end

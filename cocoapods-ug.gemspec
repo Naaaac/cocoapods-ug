@@ -6,11 +6,11 @@ require 'cocoapods-ug/gem_version.rb'
 Gem::Specification.new do |spec|
   spec.name          = 'cocoapods-ug'
   spec.version       = CocoapodsUg::VERSION
-  spec.authors       = ['huangmiaowei']
-  spec.email         = ['huangmiaowei@ugreen.com']
+  spec.authors       = ['Teemo']
+  spec.email         = ['611161512@qq.com']
   spec.description   = %q{A short description of cocoapods-ug.}
   spec.summary       = %q{A longer description of cocoapods-ug.}
-  spec.homepage      = 'https://github.com/EXAMPLE/cocoapods-ug'
+  spec.homepage      = 'https://github.com/Naaaac/cocoapods-ug.git'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)
